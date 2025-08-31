@@ -1,0 +1,180 @@
+Your stack is:
+
+Auth → Keycloak
+
+Frontend → React + Redux + TailwindCSS
+
+Backend → Django (single backend for both admin & seller portal)
+
+DB → MySQL
+
+Here’s the detailed structure + setup plan:
+
+1. Root Project Setup
+shop-platform/
+│── backend/        # Django backend (API + business logic)
+│── frontend-admin/ # React app for Admin portal
+│── frontend-seller/# React app for Seller portal
+│── docs/           # LLD, HLD, API docs, diagrams
+│── keycloak/       # Keycloak config (realms, clients, roles, etc.)
+│── docker/         # Docker compose and configs (optional)
+│── scripts/        # Utility scripts (DB migration, init setup)
+│── .env            # Environment variables (shared config)
+│── README.md
+
+2. Backend (Django)
+
+Folder Structure
+
+backend/
+│── manage.py
+│── requirements.txt
+│── .env
+│── shop_backend/
+│   │── __init__.py
+│   │── settings.py        # DB, Keycloak, Redis configs
+│   │── urls.py            # Root URL routes
+│   │── wsgi.py
+│   │── asgi.py
+│
+│── apps/
+│   │── users/             # user_profiles, addresses, preferences
+│   │── shops/             # shops, categories, policies
+│   │── products/          # products, variants, attributes
+│   │── orders/            # orders, order_items, tracking
+│   │── payments/          # transactions, payouts
+│   │── reviews/           # reviews, ratings
+│   │── notifications/     # email, SMS, push notifications
+│   │── analytics/         # reports, metrics
+│   │── security/          # audit_logs, security_logs
+│
+│── common/                # shared utils (auth, permissions, serializers)
+│── tests/                 # test cases
+
+
+Initial Setup
+
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install django djangorestframework mysqlclient python-decouple
+django-admin startproject shop_backend .
+python manage.py startapp users
+
+
+Integration with Keycloak → use django-keycloak-auth or python-keycloak.
+
+3. Frontend (React + Redux + TailwindCSS)
+
+You’ll have two frontends but same structure.
+
+Folder Structure
+
+frontend-admin/
+frontend-seller/
+│── public/
+│── src/
+│   │── api/             # API calls
+│   │── components/      # Reusable UI
+│   │── features/        # Redux slices (auth, shop, product, order)
+│   │── pages/           # Dashboard, Login, Orders, Products, etc.
+│   │── hooks/
+│   │── utils/
+│   │── App.js
+│   │── index.js
+│── tailwind.config.js
+│── package.json
+
+
+Initial Setup
+
+npx create-react-app frontend-admin
+cd frontend-admin
+npm install redux react-redux @reduxjs/toolkit axios tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+
+Same for frontend-seller.
+
+4. Database (MySQL)
+
+Use shop_db as main schema.
+
+Load your SQL file from the doc into MySQL.
+
+Connect Django ORM → settings.py:
+
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'shop_db',
+    'USER': 'root',
+    'PASSWORD': 'password',
+    'HOST': 'localhost',
+    'PORT': '3306',
+  }
+}
+
+5. Keycloak
+
+Create realm → shop-platform
+
+Create clients:
+
+admin-portal
+
+seller-portal
+
+backend-service
+
+Create roles:
+
+Admin
+
+Seller
+
+Staff
+
+Customer
+
+Configure JWT → Django middleware will validate tokens.
+
+6. Dev Workflow in VS Code
+
+Open root project folder in VS Code.
+
+Install extensions:
+
+Python (Django)
+
+MySQL
+
+React Developer Tools
+
+TailwindCSS IntelliSense
+
+Run backend:
+
+cd backend
+python manage.py runserver
+
+
+Run frontend:
+
+cd frontend-admin
+npm start
+
+
+(repeat for seller frontend).
+
+Keycloak runs separately → start Keycloak server (docker-compose up or standalone).
+
+7. Next Steps
+
+Setup Docker Compose to run Django + MySQL + Keycloak easily.
+
+Configure CORS in Django to allow admin/seller frontends.
+
+Setup API docs with drf-spectacular or drf-yasg.
+
+Add initial Redux slices (auth, shops, products).
