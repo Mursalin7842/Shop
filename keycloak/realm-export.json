@@ -1,0 +1,67 @@
+{
+  "realm": "shop-platform",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "admin-portal",
+      "name": "Admin Portal",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "redirectUris": [
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3000"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true
+    },
+    {
+      "clientId": "seller-portal",
+      "name": "Seller Portal",
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "redirectUris": [
+        "http://localhost:3001/*"
+      ],
+      "webOrigins": [
+        "http://localhost:3001"
+      ],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true
+    },
+    {
+      "clientId": "backend-service",
+      "name": "Backend Service",
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "a-dummy-secret-for-backend-service",
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "Admin",
+        "description": "Administrator role"
+      },
+      {
+        "name": "Seller",
+        "description": "Seller role"
+      },
+      {
+        "name": "Staff",
+        "description": "Staff role"
+      },
+      {
+        "name": "Customer",
+        "description": "Customer role"
+      }
+    ]
+  }
+}
